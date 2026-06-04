@@ -1,0 +1,1204 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: X Automation API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: accounts
+    description: X.com account management
+  - name: targets
+    description: Target profiles to monitor
+  - name: jobs
+    description: Automation jobs and scheduling
+  - name: media
+    description: Downloaded media management
+  - name: posts
+    description: Scheduled posts management
+  - name: stats
+    description: Dashboard statistics
+  - name: embeds
+    description: Video embed management
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /accounts:
+    get:
+      operationId: listAccounts
+      tags: [accounts]
+      summary: List all X.com accounts
+      responses:
+        "200":
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Account"
+    post:
+      operationId: createAccount
+      tags: [accounts]
+      summary: Add a new X.com account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccountBody"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+
+  /accounts/{id}:
+    get:
+      operationId: getAccount
+      tags: [accounts]
+      summary: Get account by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+    put:
+      operationId: updateAccount
+      tags: [accounts]
+      summary: Update account
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAccountBody"
+      responses:
+        "200":
+          description: Updated account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+    delete:
+      operationId: deleteAccount
+      tags: [accounts]
+      summary: Delete account
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  /targets:
+    get:
+      operationId: listTargets
+      tags: [targets]
+      summary: List all target profiles
+      responses:
+        "200":
+          description: List of targets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Target"
+    post:
+      operationId: createTarget
+      tags: [targets]
+      summary: Add a target profile to monitor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTargetBody"
+      responses:
+        "201":
+          description: Target created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Target"
+
+  /targets/{id}:
+    delete:
+      operationId: deleteTarget
+      tags: [targets]
+      summary: Remove target
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  /jobs:
+    get:
+      operationId: listJobs
+      tags: [jobs]
+      summary: List all automation jobs
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+    post:
+      operationId: createJob
+      tags: [jobs]
+      summary: Create automation job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateJobBody"
+      responses:
+        "201":
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+
+  /jobs/{id}:
+    get:
+      operationId: getJob
+      tags: [jobs]
+      summary: Get job by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+    put:
+      operationId: updateJob
+      tags: [jobs]
+      summary: Update job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateJobBody"
+      responses:
+        "200":
+          description: Updated job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+    delete:
+      operationId: deleteJob
+      tags: [jobs]
+      summary: Delete job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  /jobs/{id}/toggle:
+    post:
+      operationId: toggleJob
+      tags: [jobs]
+      summary: Enable or disable a job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Toggled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+
+  /jobs/{id}/run:
+    post:
+      operationId: runJobNow
+      tags: [jobs]
+      summary: Manually trigger a job to run now
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Job triggered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+
+  /media:
+    get:
+      operationId: listMedia
+      tags: [media]
+      summary: List downloaded media
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [image, video, all]
+        - name: jobId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of media items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MediaItem"
+
+  /media/{id}:
+    delete:
+      operationId: deleteMedia
+      tags: [media]
+      summary: Delete media item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  /posts:
+    get:
+      operationId: listPosts
+      tags: [posts]
+      summary: List scheduled posts
+      responses:
+        "200":
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScheduledPost"
+    post:
+      operationId: createPost
+      tags: [posts]
+      summary: Create a scheduled post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostBody"
+      responses:
+        "201":
+          description: Post created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduledPost"
+
+  /posts/{id}:
+    put:
+      operationId: updatePost
+      tags: [posts]
+      summary: Update scheduled post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePostBody"
+      responses:
+        "200":
+          description: Updated post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduledPost"
+    delete:
+      operationId: deletePost
+      tags: [posts]
+      summary: Delete scheduled post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  /embeds:
+    get:
+      operationId: listEmbeds
+      tags: [embeds]
+      summary: List all video embeds
+      responses:
+        "200":
+          description: List of embeds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Embed"
+    post:
+      operationId: createEmbed
+      tags: [embeds]
+      summary: Create a new video embed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEmbedBody"
+      responses:
+        "201":
+          description: Embed created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Embed"
+
+  /embeds/{id}:
+    get:
+      operationId: getEmbed
+      tags: [embeds]
+      summary: Get embed by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Embed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Embed"
+    put:
+      operationId: updateEmbed
+      tags: [embeds]
+      summary: Update embed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEmbedBody"
+      responses:
+        "200":
+          description: Updated embed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Embed"
+    delete:
+      operationId: deleteEmbed
+      tags: [embeds]
+      summary: Delete embed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  /stats/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [stats]
+      summary: Get dashboard overview statistics
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /stats/activity:
+    get:
+      operationId: getActivity
+      tags: [stats]
+      summary: Get recent activity log
+      responses:
+        "200":
+          description: Activity items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        authMode:
+          type: string
+          enum: [oauth, cookies]
+        bearerToken:
+          type: string
+        apiKey:
+          type: string
+        apiSecret:
+          type: string
+        accessToken:
+          type: string
+        accessTokenSecret:
+          type: string
+        hasCredentials:
+          type: boolean
+        hasCookies:
+          type: boolean
+        cookieUserAgent:
+          type: string
+          nullable: true
+        proxyUrl:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        postsCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - username
+        - authMode
+        - isActive
+        - postsCount
+        - createdAt
+
+    CreateAccountBody:
+      type: object
+      properties:
+        username:
+          type: string
+        authMode:
+          type: string
+          enum: [oauth, cookies]
+        bearerToken:
+          type: string
+        apiKey:
+          type: string
+        apiSecret:
+          type: string
+        accessToken:
+          type: string
+        accessTokenSecret:
+          type: string
+        cookieJson:
+          type: string
+          nullable: true
+        cookieUserAgent:
+          type: string
+          nullable: true
+        proxyUrl:
+          type: string
+          nullable: true
+      required:
+        - username
+
+    UpdateAccountBody:
+      type: object
+      properties:
+        username:
+          type: string
+        authMode:
+          type: string
+          enum: [oauth, cookies]
+        bearerToken:
+          type: string
+        apiKey:
+          type: string
+        apiSecret:
+          type: string
+        accessToken:
+          type: string
+        accessTokenSecret:
+          type: string
+        cookieJson:
+          type: string
+          nullable: true
+        cookieUserAgent:
+          type: string
+          nullable: true
+        proxyUrl:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+
+    Target:
+      type: object
+      properties:
+        id:
+          type: integer
+        xUsername:
+          type: string
+        displayName:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+        mediaCount:
+          type: integer
+        lastChecked:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - xUsername
+        - mediaCount
+        - createdAt
+
+    CreateTargetBody:
+      type: object
+      properties:
+        xUsername:
+          type: string
+      required:
+        - xUsername
+
+    Job:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        accountId:
+          type: integer
+        targetId:
+          type: integer
+          nullable: true
+        accountUsername:
+          type: string
+        targetUsername:
+          type: string
+          nullable: true
+        mediaSource:
+          type: string
+          enum: [grab, library, home]
+        savedMediaId:
+          type: integer
+          nullable: true
+        scheduleType:
+          type: string
+          enum: [interval, cron, once]
+        scheduleValue:
+          type: string
+        grabImages:
+          type: boolean
+        grabVideos:
+          type: boolean
+        includeReplies:
+          type: boolean
+        extractLinksFromReplies:
+          type: boolean
+        allowedVideoDomains:
+          type: string
+          nullable: true
+        uploadToDood:
+          type: boolean
+        doodApiKey:
+          type: string
+          nullable: true
+        postToX:
+          type: boolean
+        postTemplate:
+          type: string
+          nullable: true
+        insertLink:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        lastRun:
+          type: string
+          format: date-time
+          nullable: true
+        nextRun:
+          type: string
+          format: date-time
+          nullable: true
+        runsCount:
+          type: integer
+        status:
+          type: string
+          enum: [idle, running, error]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - accountId
+        - targetId
+        - accountUsername
+        - targetUsername
+        - mediaSource
+        - scheduleType
+        - scheduleValue
+        - grabImages
+        - grabVideos
+        - includeReplies
+        - extractLinksFromReplies
+        - uploadToDood
+        - postToX
+        - isActive
+        - runsCount
+        - status
+        - createdAt
+
+    CreateJobBody:
+      type: object
+      properties:
+        name:
+          type: string
+        accountId:
+          type: integer
+        targetId:
+          type: integer
+          nullable: true
+        mediaSource:
+          type: string
+          enum: [grab, library, home]
+        savedMediaId:
+          type: integer
+          nullable: true
+        scheduleType:
+          type: string
+          enum: [interval, cron, once]
+        scheduleValue:
+          type: string
+        grabImages:
+          type: boolean
+        grabVideos:
+          type: boolean
+        includeReplies:
+          type: boolean
+        extractLinksFromReplies:
+          type: boolean
+        allowedVideoDomains:
+          type: string
+          nullable: true
+        keywordFilter:
+          type: string
+          nullable: true
+          description: Comma-separated keywords to filter media
+        grabExternalLinksOnly:
+          type: boolean
+          description: Enable to grab videos from external links (YouTube, TikTok, etc). By default (false), only X native videos are grabbed.
+        uploadToDood:
+          type: boolean
+        doodApiKey:
+          type: string
+          nullable: true
+        postToX:
+          type: boolean
+        postTemplate:
+          type: string
+          nullable: true
+        insertLink:
+          type: string
+          nullable: true
+        autoEmbed:
+          type: boolean
+        proxyList:
+          type: string
+          nullable: true
+        aiEnabled:
+          type: boolean
+        aiProvider:
+          type: string
+          enum: [openai, groq]
+        aiApiKey:
+          type: string
+          nullable: true
+        aiPrompt:
+          type: string
+          nullable: true
+        repostEnabled:
+          type: boolean
+        primeTimeHours:
+          type: string
+          nullable: true
+        repostTargetAccountId:
+          type: integer
+          nullable: true
+        watermarkEnabled:
+          type: boolean
+        watermarkType:
+          type: string
+          enum: [text, logo]
+        watermarkText:
+          type: string
+          nullable: true
+        watermarkFontSize:
+          type: integer
+        watermarkFontWeight:
+          type: string
+          enum: [normal, bold]
+        watermarkColor:
+          type: string
+        watermarkOpacity:
+          type: number
+        watermarkPosition:
+          type: string
+          enum: [top-left, top-right, bottom-left, bottom-right, center]
+        watermarkLogoUrl:
+          type: string
+          nullable: true
+      required:
+        - name
+        - accountId
+        - mediaSource
+        - scheduleType
+        - scheduleValue
+        - grabImages
+        - grabVideos
+        - includeReplies
+        - extractLinksFromReplies
+        - uploadToDood
+        - postToX
+
+    UpdateJobBody:
+      type: object
+      properties:
+        name:
+          type: string
+        mediaSource:
+          type: string
+          enum: [grab, library, home]
+        savedMediaId:
+          type: integer
+          nullable: true
+        scheduleType:
+          type: string
+          enum: [interval, cron, once]
+        scheduleValue:
+          type: string
+        grabImages:
+          type: boolean
+        grabVideos:
+          type: boolean
+        includeReplies:
+          type: boolean
+        extractLinksFromReplies:
+          type: boolean
+        allowedVideoDomains:
+          type: string
+          nullable: true
+        uploadToDood:
+          type: boolean
+        doodApiKey:
+          type: string
+          nullable: true
+        postToX:
+          type: boolean
+        postTemplate:
+          type: string
+          nullable: true
+        insertLink:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+
+    MediaItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        jobId:
+          type: integer
+        targetUsername:
+          type: string
+        type:
+          type: string
+          enum: [image, video]
+        originalUrl:
+          type: string
+        localPath:
+          type: string
+          nullable: true
+        doodUrl:
+          type: string
+          nullable: true
+        doodStatus:
+          type: string
+          enum: [pending, uploading, done, failed]
+          nullable: true
+        fileSize:
+          type: integer
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - jobId
+        - targetUsername
+        - type
+        - originalUrl
+        - createdAt
+
+    ScheduledPost:
+      type: object
+      properties:
+        id:
+          type: integer
+        accountId:
+          type: integer
+        accountUsername:
+          type: string
+        content:
+          type: string
+        insertLink:
+          type: string
+          nullable: true
+        mediaId:
+          type: integer
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, posted, failed]
+        postedAt:
+          type: string
+          format: date-time
+          nullable: true
+        xPostId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - accountId
+        - accountUsername
+        - content
+        - scheduledAt
+        - status
+        - createdAt
+
+    CreatePostBody:
+      type: object
+      properties:
+        accountId:
+          type: integer
+        content:
+          type: string
+        insertLink:
+          type: string
+          nullable: true
+        mediaId:
+          type: integer
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+      required:
+        - accountId
+        - content
+        - scheduledAt
+
+    UpdatePostBody:
+      type: object
+      properties:
+        content:
+          type: string
+        insertLink:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, posted, failed]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalAccounts:
+          type: integer
+        activeJobs:
+          type: integer
+        totalMediaGrabbed:
+          type: integer
+        totalVideosUploaded:
+          type: integer
+        totalPostsMade:
+          type: integer
+        pendingPosts:
+          type: integer
+        mediaByType:
+          type: object
+          properties:
+            images:
+              type: integer
+            videos:
+              type: integer
+          required:
+            - images
+            - videos
+        jobsByStatus:
+          type: object
+          properties:
+            active:
+              type: integer
+            idle:
+              type: integer
+            error:
+              type: integer
+          required:
+            - active
+            - idle
+            - error
+      required:
+        - totalAccounts
+        - activeJobs
+        - totalMediaGrabbed
+        - totalVideosUploaded
+        - totalPostsMade
+        - pendingPosts
+        - mediaByType
+        - jobsByStatus
+
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [media_grabbed, video_uploaded, post_published, job_error, job_run]
+        message:
+          type: string
+        jobId:
+          type: integer
+          nullable: true
+        accountUsername:
+          type: string
+          nullable: true
+        targetUsername:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - message
+        - createdAt
+
+    Embed:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        title:
+          type: string
+          nullable: true
+        doodUrl:
+          type: string
+        customLink:
+          type: string
+        popupDelay:
+          type: integer
+          description: Seconds after load before first popup (0 = immediate on click play)
+        popupInterval:
+          type: integer
+          description: Seconds between repeat popups (default 180 = 3 minutes)
+        popupOnClick:
+          type: integer
+          description: 1 = redirect on video click, 0 = popup only
+        views:
+          type: integer
+        clicks:
+          type: integer
+        embedUrl:
+          type: string
+          description: Full embed URL for sharing (e.g. /v/{code})
+        redirectUrl:
+          type: string
+          description: Direct redirect URL (/r/{code}) — redirects to customLink
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - code
+        - doodUrl
+        - customLink
+        - popupDelay
+        - popupInterval
+        - popupOnClick
+        - views
+        - clicks
+        - embedUrl
+        - redirectUrl
+        - createdAt
+
+    CreateEmbedBody:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+        doodUrl:
+          type: string
+          description: DoodStream video URL or embed URL
+        customLink:
+          type: string
+          description: Your custom link to promote
+        popupDelay:
+          type: integer
+          default: 0
+        popupInterval:
+          type: integer
+          default: 180
+        popupOnClick:
+          type: integer
+          default: 1
+      required:
+        - doodUrl
+        - customLink
+
+    UpdateEmbedBody:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+        doodUrl:
+          type: string
+        customLink:
+          type: string
+        popupDelay:
+          type: integer
+        popupInterval:
+          type: integer
+        popupOnClick:
+          type: integer

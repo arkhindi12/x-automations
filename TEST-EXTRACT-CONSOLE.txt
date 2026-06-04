@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║           TEST EXTRACT LANGSUNG DARI BROWSER CONSOLE                ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Untuk bypass browser cache dan test langsung, ikuti langkah ini:
+
+1. Buka: http://localhost:3000
+
+2. Buka Developer Console:
+   - Safari: Cmd + Option + C
+   - Chrome: Cmd + Option + J
+
+3. Paste kode ini di console dan tekan Enter:
+
+```javascript
+fetch('/api/media/extract', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ url: 'vcolle.de/e/8ludm21n1cxe' })
+})
+.then(r => r.json())
+.then(data => console.log('SUCCESS:', data))
+.catch(err => console.error('ERROR:', err));
+```
+
+4. Lihat response di console:
+   - Kalau SUCCESS: berarti backend berhasil, masalahnya di browser cache
+   - Kalau ERROR: screenshot error-nya
+
+5. Kalau SUCCESS, clear browser cache:
+   - Safari: Cmd + Option + E
+   - Chrome: Cmd + Shift + Delete
+   
+6. Hard refresh: Cmd + Shift + R
+
+7. Test lagi di UI Media Library
+
+═══════════════════════════════════════════════════════════════════════
+
+ATAU test langsung via curl:
+
+```bash
+curl -X POST http://localhost:3000/api/media/extract \
+  -H 'Content-Type: application/json' \
+  -d '{"url":"vcolle.de/e/8ludm21n1cxe"}' | jq .
+```
+
+Kalau curl berhasil tapi UI gagal = masalah browser cache.
+
+═══════════════════════════════════════════════════════════════════════

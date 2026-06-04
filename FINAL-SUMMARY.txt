@@ -1,0 +1,172 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                  ✅ MASALAH SOLVED: Rate Limit                       ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🎯 MASALAH KAMU                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Error "connection failed undefined" karena RATE LIMIT
+  
+  Kamu sudah test terlalu banyak (max 3 kali per 15 menit)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ✅ SOLUSI                                                           │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Backend sudah di-restart ✅
+  Rate limit sudah di-reset ✅
+  
+  SEKARANG KAMU BISA TEST LAGI!
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📋 CARA TEST CONNECTION YANG BENAR                                  │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Refresh halaman http://localhost:5001
+  
+  2. Klik "Add Account" → "Cookies Login"
+  
+  3. Isi form:
+     • Username: your_username (tanpa @)
+     • Cookie JSON: Paste SELURUH JSON dari Cookie-Editor
+     • User-Agent: (optional)
+  
+  4. Klik "Test Connection" SEKALI SAJA
+  
+  5. Tunggu 5-10 detik
+  
+  6. Lihat hasil:
+     ✅ "Cookies validated" → Klik Save
+     ❌ Error → Lihat pesan error
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ⚠️ HINDARI RATE LIMIT                                               │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Rate limit: 3 test per 15 menit per IP
+  
+  Tips:
+  • Jangan spam klik "Test Connection"
+  • Test via script dulu: node test-cookie-ui-format.mjs
+  • Kalau kena rate limit, restart backend:
+    ./restart-backend.sh
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🔧 KALAU KENA RATE LIMIT LAGI                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Jalankan script ini:
+  
+    ./restart-backend.sh
+  
+  Atau manual:
+  
+    lsof -ti:3006 | xargs kill -9
+    cd "$HOME/Downloads/X automation"
+    export DATABASE_URL=postgresql://postgres@localhost:5433/x_automation
+    export PORT=3006
+    nohup pnpm --filter @workspace/api-server run dev > .api-server.log 2>&1 &
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📝 FORMAT COOKIE YANG BENAR                                         │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Dari Cookie-Editor, kamu akan dapat JSON seperti ini:
+  
+  [
+    {
+      "domain": ".x.com",
+      "name": "auth_token",
+      "value": "a1b2c3d4e5f6...",
+      ...
+    },
+    {
+      "domain": ".x.com",
+      "name": "ct0",
+      "value": "1a2b3c4d5e6f...",
+      ...
+    }
+  ]
+  
+  Paste SELURUH JSON ini ke form "Cookie JSON"
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🐛 COMMON ERRORS                                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+  "Cookie undefined"
+    → Paste ke text editor dulu, baru copy ke form
+  
+  "AUTH_TOKEN_MISSING"
+    → Export ulang dari tab yang sudah login (bukan incognito)
+  
+  "CT0_MISSING"
+    → Refresh x.com lalu export ulang
+  
+  "Connection failed"
+    → Backend mati, jalankan: ./restart-backend.sh
+  
+  "Rate limit"
+    → Tunggu 15 menit atau jalankan: ./restart-backend.sh
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📚 DOKUMENTASI                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+  SOLVED-CONNECTION-FAILED.md  → Panduan lengkap
+  QUICK-FIX-COOKIE.txt         → Quick reference
+  PANDUAN-FIX-COOKIE.md        → Step-by-step guide
+  restart-backend.sh           → Script restart backend
+  test-cookie-ui-format.mjs    → Script test cookie
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🎯 CHECKLIST                                                        │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Sebelum test, pastikan:
+  
+  □ Sudah login ke x.com
+  □ Cookie-Editor extension terinstall
+  □ Export cookies dalam format JSON
+  □ Cookie mengandung auth_token dan ct0
+  □ Username tanpa @ (contoh: elonmusk bukan @elonmusk)
+  □ Backend running (lsof -i:3006)
+  □ Frontend running (lsof -i:5001)
+  □ Belum kena rate limit (max 3 test per 15 menit)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 💡 TIPS PENTING                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Test via script DULU sebelum paste ke UI
+     node test-cookie-ui-format.mjs
+  
+  2. Paste ke text editor dulu untuk verifikasi format
+  
+  3. Jangan spam klik "Test Connection"
+  
+  4. Kalau kena rate limit, restart backend:
+     ./restart-backend.sh
+  
+  5. Cookie expired? Login ulang lalu export baru
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🆘 MASIH ERROR?                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Cek browser console (F12)
+  2. Cek backend log: tail -50 .api-server.log
+  3. Test via curl (lihat SOLVED-CONNECTION-FAILED.md)
+  4. Kirim screenshot error + log (tanpa cookie value)
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  Backend sudah di-restart. Refresh halaman dan test lagi sekarang!  ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+NEXT STEPS:
+1. Refresh http://localhost:5001
+2. Add Account → Cookies Login
+3. Paste cookie JSON
+4. Test Connection (SEKALI SAJA)
+5. Save kalau valid

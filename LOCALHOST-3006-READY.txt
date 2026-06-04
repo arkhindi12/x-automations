@@ -1,0 +1,115 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║          ✅ API SERVER BERHASIL JALAN DI LOCALHOST:3006              ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🎯 STATUS                                                           │
+└─────────────────────────────────────────────────────────────────────┘
+
+  ✅ PostgreSQL running      → localhost:5433
+  ✅ Database created         → x_automation
+  ✅ Migration completed      → All tables created
+  ✅ API server running       → localhost:3006
+  ✅ Endpoints working        → /api/accounts tested
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🌐 AKSES API                                                        │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Base URL:  http://localhost:3006
+
+  Browser:   http://localhost:3006/api/accounts
+  
+  cURL:      curl http://localhost:3006/api/accounts
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🧪 TEST COOKIE LOGIN                                                │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Export cookie dari x.com (pakai Cookie-Editor extension)
+  
+  2. Test diagnostic:
+     curl -X POST http://localhost:3006/api/accounts/test-diagnostic \
+       -H "Content-Type: application/json" \
+       -d '{
+         "username": "YOUR_USERNAME",
+         "authMode": "cookies",
+         "cookieJson": "PASTE_COOKIE_JSON",
+         "cookieUserAgent": "Mozilla/5.0...",
+         "proxyUrl": null
+       }'
+  
+  3. Lihat hasil:
+     - ok: true  → Cookie valid ✅
+     - ok: false → Lihat reason & suggestions untuk fix
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📋 ENDPOINTS TERSEDIA                                               │
+└─────────────────────────────────────────────────────────────────────┘
+
+  GET    /api/accounts                    → List semua akun
+  POST   /api/accounts                    → Buat akun baru
+  POST   /api/accounts/test-diagnostic    → Test cookie login
+  POST   /api/accounts/:id/cookies        → Update cookies
+  GET    /api/auth-monitor/health         → Monitor auth health
+  GET    /api/metrics                     → Performance metrics
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ⚠️  RATE LIMIT                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+  /test-diagnostic → 3 requests per 15 menit per IP
+  
+  Kalau kena limit:
+  - Tunggu 15 menit, atau
+  - Restart server: lsof -ti:3006 | xargs kill -9
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🔧 MANAGEMENT                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Lihat log:
+    tail -f .api-server.log
+  
+  Stop server:
+    lsof -ti:3006 | xargs kill -9
+  
+  Stop PostgreSQL:
+    cd "$HOME/Downloads/X automation"
+    export PGDATA="$PWD/.pgdata"
+    export PATH="/tmp/pgsql/bin:$PATH"
+    pg_ctl -D .pgdata stop
+  
+  Restart semua:
+    # Stop
+    lsof -ti:3006 | xargs kill -9
+    pg_ctl -D .pgdata stop
+    
+    # Start
+    pg_ctl -D .pgdata start -o "-p 5433"
+    export DATABASE_URL=postgresql://postgres@localhost:5433/x_automation
+    export PORT=3006
+    nohup pnpm --filter @workspace/api-server run dev > .api-server.log 2>&1 &
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📚 DOKUMENTASI                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+  SERVER-RUNNING.md          → Panduan lengkap server
+  TEST-COOKIE-LOGIN.md       → Cara test cookie login
+  QUICK-REFERENCE.txt        → Quick reference
+  AUTH_ENHANCEMENT.md        → Dokumentasi fitur auth
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🎉 NEXT STEPS                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Export cookie dari x.com (login dulu)
+  2. Test via curl atau browser
+  3. Lihat hasil diagnostic
+  4. Kalau valid, buat account via POST /api/accounts
+  5. Mulai automasi X!
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  Server siap! Paste cookie asli dari x.com untuk test real login.  ║
+╚══════════════════════════════════════════════════════════════════════╝

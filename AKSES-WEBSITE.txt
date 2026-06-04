@@ -1,0 +1,138 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║              ✅ WEBSITE & API BERHASIL JALAN!                        ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🌐 AKSES WEBSITE (FRONTEND UI)                                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Buka di browser:
+  
+    http://localhost:5001
+  
+  Ini adalah dashboard UI dengan tampilan visual untuk:
+  - Manage akun X
+  - Buat job automation
+  - Upload media
+  - Monitor posts
+  - Settings
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🔌 AKSES API (BACKEND)                                              │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Base URL:
+  
+    http://localhost:3006
+  
+  Ini adalah REST API untuk:
+  - Endpoint JSON
+  - Integrasi dengan aplikasi lain
+  - Test via curl/Postman
+  
+  Contoh:
+    http://localhost:3006/api/accounts
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📊 PERBEDAAN FRONTEND vs BACKEND                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Frontend (Port 5001):
+  ✓ Website dengan UI visual
+  ✓ Dashboard, forms, tables
+  ✓ Buka di browser
+  ✓ User-friendly
+  
+  Backend (Port 3006):
+  ✓ REST API (JSON)
+  ✓ Endpoint untuk data
+  ✓ Akses via curl/code
+  ✓ Developer-friendly
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🎯 CARA PAKAI                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Buka browser → http://localhost:5001
+  
+  2. Klik menu "Accounts" di sidebar
+  
+  3. Klik tombol "Add Account"
+  
+  4. Pilih "Cookies Login"
+  
+  5. Isi form:
+     - Username: username X tanpa @
+     - Cookie JSON: paste dari Cookie-Editor
+     - User-Agent: copy dari browser
+  
+  6. Klik "Test Connection"
+  
+  7. Kalau valid, klik "Save"
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🔧 STATUS SERVICES                                                  │
+└─────────────────────────────────────────────────────────────────────┘
+
+  PostgreSQL:  ✅ Running (port 5433)
+  Backend API: ✅ Running (port 3006)
+  Frontend UI: ✅ Running (port 5001)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📝 LOGS                                                             │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Backend log:
+    tail -f .api-server.log
+  
+  Frontend log:
+    tail -f .frontend.log
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🛑 STOP SERVICES                                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Stop frontend:
+    lsof -ti:5001 | xargs kill -9
+  
+  Stop backend:
+    lsof -ti:3006 | xargs kill -9
+  
+  Stop PostgreSQL:
+    cd "$HOME/Downloads/X automation"
+    export PGDATA="$PWD/.pgdata"
+    export PATH="/tmp/pgsql/bin:$PATH"
+    pg_ctl -D .pgdata stop
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🔄 RESTART SERVICES                                                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Restart backend:
+    cd "$HOME/Downloads/X automation"
+    export DATABASE_URL=postgresql://postgres@localhost:5433/x_automation
+    export PORT=3006
+    nohup pnpm --filter @workspace/api-server run dev > .api-server.log 2>&1 &
+  
+  Restart frontend:
+    export API_PROXY_TARGET=http://127.0.0.1:3006
+    export PORT=5001
+    export BASE_PATH=/
+    nohup pnpm --filter @workspace/x-automation run dev > .frontend.log 2>&1 &
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🎨 FITUR YANG TERSEDIA DI UI                                        │
+└─────────────────────────────────────────────────────────────────────┘
+
+  📱 Dashboard     → Overview & statistics
+  👤 Accounts      → Manage X accounts (cookie/password login)
+  🎯 Targets       → Target accounts untuk automation
+  📋 Jobs          → Automation jobs (repost, reply, etc)
+  🖼️  Media        → Upload & manage media files
+  📝 Posts         → View posted tweets
+  ⚙️  Settings     → App configuration
+  📊 Stats         → Analytics & monitoring
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  Buka http://localhost:5001 di browser untuk akses dashboard UI!    ║
+╚══════════════════════════════════════════════════════════════════════╝

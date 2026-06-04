@@ -1,0 +1,90 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                  ✅ BACKEND SUDAH DI-RESTART                         ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Rate limit sudah di-reset. Sekarang ada 2 cara untuk test:
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ OPSI 1: TEST VIA UI (Recommended)                                   │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Refresh halaman: http://localhost:5001
+  
+  2. Add Account → Cookies Login
+  
+  3. Isi form:
+     • Username: your_username (tanpa @)
+     • Cookie JSON: Paste dari Cookie-Editor
+     • User-Agent: (optional)
+  
+  4. Klik "Test Connection" SEKALI
+  
+  5. Tunggu 5-10 detik
+  
+  6. Lihat hasil:
+     ✅ Success → Klik Save
+     ❌ Error → Screenshot dan kirim ke saya
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ OPSI 2: TEST VIA TERMINAL (For Debugging)                           │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Jalankan script interaktif:
+  
+    ./test-cookie-interactive.sh
+  
+  Script akan minta:
+  1. Username X (tanpa @)
+  2. Cookie JSON (paste dari Cookie-Editor)
+  
+  Lalu akan test ke server dan tampilkan hasil detail.
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📋 CARA EXPORT COOKIE YANG BENAR                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Login ke https://x.com
+  
+  2. Install extension "Cookie-Editor"
+  
+  3. Klik Cookie-Editor → Export → JSON
+  
+  4. Cookie akan di-copy ke clipboard
+  
+  5. Paste ke text editor untuk verifikasi
+  
+  6. Pastikan ada:
+     • auth_token (session token)
+     • ct0 (CSRF token)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ⚠️ PENTING                                                          │
+└─────────────────────────────────────────────────────────────────────┘
+
+  • Jangan spam klik "Test Connection"
+  • Max 3 test per 15 menit
+  • Kalau kena rate limit lagi: ./restart-backend.sh
+  • Test via terminal dulu untuk lihat error detail
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🐛 KALAU MASIH ERROR                                                │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Kirim ke saya:
+  
+  1. Screenshot error dari UI, atau
+  2. Output dari ./test-cookie-interactive.sh
+  3. Jangan kirim cookie value (sensitif!)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📚 DOKUMENTASI                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+  FINAL-SUMMARY.txt            → Summary lengkap
+  SOLVED-CONNECTION-FAILED.md  → Panduan detail
+  restart-backend.sh           → Restart backend
+  test-cookie-interactive.sh   → Test via terminal
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  Pilih salah satu opsi di atas untuk test cookie login!             ║
+╚══════════════════════════════════════════════════════════════════════╝

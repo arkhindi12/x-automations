@@ -1,0 +1,45 @@
+# secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.secret
+secrets/
+
+# deps/build
+node_modules/
+dist/
+build/
+.next/
+coverage/
+.cache/
+
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# system
+.DS_Store
+*.swp
+
+# python
+__pycache__/
+.venv/
+venv/
+.pytest_cache/
+
+# runtime/data
+uploads/
+tmp/
+*.sqlite
+*.sqlite3
+*.db
+
+# hermes
+.hermes/

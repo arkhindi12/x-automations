@@ -1,0 +1,122 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║           🔧 QUICK FIX: Cookie Undefined / Connection Failed         ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ❌ MASALAH                                                          │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Error "undefined" atau "connection failed" saat test cookie login
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ✅ SOLUSI CEPAT                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Export Cookie dari X.com
+     ─────────────────────────
+     • Login ke https://x.com
+     • Install extension "Cookie-Editor"
+     • Klik Cookie-Editor → Export → JSON
+     • Paste ke text editor (Notepad)
+     • Save sebagai my-cookies.json
+
+  2. Verifikasi Cookie
+     ──────────────────
+     Cookie harus mengandung:
+     ✓ auth_token (session token)
+     ✓ ct0 (CSRF token)
+     ✓ domain: .x.com atau x.com
+
+  3. Test via Script (RECOMMENDED)
+     ──────────────────────────────
+     cd "$HOME/Downloads/X automation"
+     node test-cookie-ui-format.mjs
+     
+     Edit script:
+     • Ganti YOUR_USERNAME
+     • Ganti PASTE_YOUR_AUTH_TOKEN_HERE
+     • Ganti PASTE_YOUR_CT0_HERE
+     
+     Jalankan ulang sampai semua ✅
+
+  4. Test ke Server
+     ──────────────
+     curl -X POST http://localhost:3006/api/accounts/test-diagnostic \
+       -H "Content-Type: application/json" \
+       -d @test-my-cookie.json
+     
+     Hasil sukses:
+     {"ok":true,"reason":"OK","message":"Cookies validated"}
+
+  5. Paste ke UI
+     ────────────
+     • Buka http://localhost:5001
+     • Accounts → Add Account → Cookies Login
+     • Paste SELURUH JSON dari Cookie-Editor
+     • Test Connection
+     • Save
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🐛 COMMON ERRORS                                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+  "Cookie undefined"
+    → Paste ke text editor dulu, baru copy ke form UI
+  
+  "AUTH_TOKEN_MISSING"
+    → Export ulang dari tab yang sudah login (bukan incognito)
+  
+  "CT0_MISSING"
+    → Refresh x.com lalu export ulang
+  
+  "Connection failed"
+    → Backend mati, restart: lsof -ti:3006 | xargs kill -9
+  
+  "Rate limit"
+    → Tunggu 15 menit atau restart backend
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📋 CHECKLIST                                                        │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Sebelum test, pastikan:
+  
+  □ Sudah login ke x.com
+  □ Cookie-Editor extension terinstall
+  □ Export cookies dalam format JSON
+  □ Cookie mengandung auth_token dan ct0
+  □ Username tanpa @ (contoh: elonmusk bukan @elonmusk)
+  □ Backend running (lsof -i:3006)
+  □ Frontend running (lsof -i:5001)
+  □ Test via script dulu sebelum paste ke UI
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 💡 TIPS                                                             │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. SELALU test via script dulu (node test-cookie-ui-format.mjs)
+  2. Paste ke text editor dulu untuk verifikasi format
+  3. Jangan edit cookie manual - bisa rusak JSON
+  4. Pakai browser yang sama untuk export cookie dan User-Agent
+  5. Cookie expired? Login ulang ke x.com lalu export baru
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📚 DOKUMENTASI LENGKAP                                              │
+└─────────────────────────────────────────────────────────────────────┘
+
+  PANDUAN-FIX-COOKIE.md      → Panduan step-by-step lengkap
+  FIX-COOKIE-UNDEFINED.md    → Troubleshooting detail
+  test-cookie-ui-format.mjs  → Script test cookie
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🆘 MASIH ERROR?                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Jalankan: node test-cookie-ui-format.mjs
+  2. Kirim hasil test (tanpa cookie value)
+  3. Cek log: tail -50 .api-server.log
+  4. Cek browser console (F12)
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  Test via script dulu sebelum paste ke UI untuk avoid error!        ║
+╚══════════════════════════════════════════════════════════════════════╝

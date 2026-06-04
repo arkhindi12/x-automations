@@ -1,0 +1,7 @@
+{
+  "username": "YOUR_X_USERNAME_WITHOUT_@",
+  "authMode": "cookies",
+  "cookieJson": "[{\"domain\":\".x.com\",\"name\":\"auth_token\",\"value\":\"PASTE_YOUR_AUTH_TOKEN_HERE\",\"path\":\"/\",\"httpOnly\":true,\"secure\":true},{\"domain\":\".x.com\",\"name\":\"ct0\",\"value\":\"PASTE_YOUR_CT0_HERE\",\"path\":\"/\",\"httpOnly\":false,\"secure\":true}]",
+  "cookieUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "proxyUrl": null
+}

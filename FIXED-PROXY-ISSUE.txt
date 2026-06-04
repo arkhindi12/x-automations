@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║              ✅ FIXED: Frontend Proxy Configuration                  ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🎯 MASALAH                                                          │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Error "connection failed undefined" karena:
+  1. Rate limit (sudah di-fix)
+  2. Frontend proxy tidak ter-konfigurasi dengan benar (BARU DI-FIX)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ✅ SOLUSI                                                           │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Frontend sudah di-restart dengan proxy yang benar:
+  
+  /api → http://127.0.0.1:3006
+  
+  Sekarang request dari UI akan di-forward ke backend dengan benar.
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📋 TEST SEKARANG                                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. REFRESH halaman: http://localhost:5001
+     (Tekan Cmd+Shift+R atau Ctrl+Shift+R untuk hard refresh)
+  
+  2. Klik "Add Account" → "Cookies Login"
+  
+  3. Isi form:
+     • Username: your_username (tanpa @)
+     • Cookie JSON: Paste SELURUH JSON dari Cookie-Editor
+     • User-Agent: (optional)
+  
+  4. Klik "Test Connection" SEKALI
+  
+  5. Tunggu 5-10 detik
+  
+  6. Lihat hasil:
+     ✅ Success → Klik Save
+     ❌ Error → Lihat pesan error (bukan "undefined" lagi)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🔧 KALAU MASIH ERROR                                                │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Kalau masih error "undefined" atau "connection failed":
+  
+  1. Restart semua service:
+     ./restart-all.sh
+  
+  2. Hard refresh browser:
+     Cmd+Shift+R (Mac) atau Ctrl+Shift+R (Windows)
+  
+  3. Clear browser cache:
+     - Chrome: Settings → Privacy → Clear browsing data
+     - Firefox: Preferences → Privacy → Clear Data
+  
+  4. Test lagi
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📝 CARA EXPORT COOKIE                                               │
+└─────────────────────────────────────────────────────────────────────┘
+
+  1. Login ke https://x.com
+  
+  2. Install extension "Cookie-Editor"
+  
+  3. Klik Cookie-Editor → Export → JSON
+  
+  4. Paste ke text editor untuk verifikasi
+  
+  5. Pastikan ada:
+     • auth_token (session token)
+     • ct0 (CSRF token)
+  
+  6. Copy SELURUH JSON
+  
+  7. Paste ke form "Cookie JSON" di UI
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ⚠️ PENTING                                                          │
+└─────────────────────────────────────────────────────────────────────┘
+
+  • Hard refresh browser setelah restart service
+  • Jangan spam klik "Test Connection"
+  • Max 3 test per 15 menit
+  • Kalau kena rate limit: ./restart-backend.sh
+  • Kalau masih "undefined": ./restart-all.sh
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 🐛 ERROR YANG MUNGKIN MUNCUL                                        │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Sekarang kalau ada error, kamu akan lihat pesan yang jelas:
+  
+  ❌ "Cookie auth_token tidak ditemukan"
+     → Export ulang dari tab yang sudah login
+  
+  ❌ "Cookie ct0 tidak ditemukan"
+     → Refresh x.com lalu export ulang
+  
+  ❌ "Could not authenticate you"
+     → Cookie expired, login ulang lalu export baru
+  
+  ❌ "Username tidak match"
+     → Pastikan username sama dengan pemilik cookie
+  
+  Bukan lagi "undefined" atau "connection failed"!
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 📚 SCRIPTS TERSEDIA                                                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+  restart-backend.sh           → Restart backend saja (reset rate limit)
+  restart-all.sh               → Restart semua service (full reset)
+  test-cookie-interactive.sh   → Test via terminal (debugging)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ✅ STATUS AKHIR                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+  ✅ PostgreSQL: Running (port 5433)
+  ✅ Backend API: Running (port 3006)
+  ✅ Frontend UI: Running (port 5001)
+  ✅ Proxy config: Fixed (/api → backend)
+  ✅ Rate limit: Reset
+  ✅ Siap test: Hard refresh dan test lagi
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  Hard refresh browser (Cmd+Shift+R) dan test connection lagi!       ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+NEXT STEPS:
+1. Hard refresh: Cmd+Shift+R atau Ctrl+Shift+R
+2. Add Account → Cookies Login
+3. Paste cookie JSON
+4. Test Connection (SEKALI)
+5. Lihat hasil (sekarang error message akan jelas)

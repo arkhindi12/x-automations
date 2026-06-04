@@ -1,0 +1,73 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║              COUNTDOWN TIMER DITAMBAHKAN DI HALAMAN JOBS             ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+✅ Sekarang di halaman Jobs, kamu bisa lihat countdown timer yang
+   menunjukkan berapa lama lagi job berikutnya akan diproses.
+
+═══════════════════════════════════════════════════════════════════════
+
+📋 FITUR BARU:
+
+1. Countdown timer muncul di kolom Status, tepat di bawah badge status job
+
+2. Format countdown:
+   - Kalau lebih dari 1 menit: "5m 23s"
+   - Kalau kurang dari 1 menit: "45s"
+   - Kalau sudah waktunya: "Running soon..."
+
+3. Timer update setiap detik secara real-time
+
+4. Timer hanya muncul kalau:
+   - Job dalam status ACTIVE (switch ON)
+   - Job tidak sedang running
+   - Job punya next_run schedule
+
+═══════════════════════════════════════════════════════════════════════
+
+🎯 CONTOH TAMPILAN:
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ Job Name │ Target → Account │ Schedule │ Status                     │
+├─────────────────────────────────────────────────────────────────────┤
+│ zaguza   │ Home timeline    │ Every 60m│ [ON] IDLE                  │
+│          │ → @YetiMeika     │          │      4m 58s                │
+└─────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════
+
+🔧 CARA LIHAT:
+
+1. Buka:
+   http://localhost:3000
+
+2. Hard refresh:
+   Cmd + Shift + R
+
+3. Masuk halaman:
+   Jobs
+
+4. Lihat kolom Status
+
+5. Di bawah badge IDLE/RUNNING/ERROR, akan muncul countdown timer
+   dengan font kecil warna abu-abu
+
+═══════════════════════════════════════════════════════════════════════
+
+✅ STATUS:
+
+Server: http://localhost:3000
+Frontend: ✅ Rebuild selesai
+Backend: ✅ Running
+Countdown: ✅ Update setiap 1 detik
+
+═══════════════════════════════════════════════════════════════════════
+
+📝 CATATAN:
+
+- Timer ini client-side, jadi tidak perlu polling ke backend
+- Timer otomatis sync dengan next_run dari database
+- Kalau job sedang running, timer tidak muncul
+- Kalau job di-pause (switch OFF), timer tidak muncul
+
+═══════════════════════════════════════════════════════════════════════

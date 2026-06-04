@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract Test - Simple</title>
+    <style>
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        input, button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 16px;
+            font-family: monospace;
+        }
+        button {
+            background: #0070f3;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0051cc;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .error {
+            color: #ff4444;
+        }
+        .success {
+            color: #44ff44;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Extract Test - Simple</h1>
+    <p>Test auto-add https:// tanpa cache</p>
+    
+    <input type="text" id="urlInput" placeholder="Paste URL di sini (contoh: vcolle.de/e/8ludm21n1cxe)" value="vcolle.de/e/8ludm21n1cxe">
+    
+    <button onclick="testExtract()">🚀 Test Extract</button>
+    
+    <div id="result"></div>
+
+    <script>
+        async function testExtract() {
+            const url = document.getElementById('urlInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!url) {
+                resultDiv.innerHTML = '<span class="error">❌ URL kosong</span>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '⏳ Loading...';
+            
+            try {
+                const timestamp = Date.now();
+                const response = await fetch(`/api/media/extract?t=${timestamp}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<span class="success">✅ SUCCESS</span>\n\n` +
+                        `Status: ${response.status}\n` +
+                        `Method: ${data.method}\n` +
+                        `Direct URL: ${data.directUrl}\n\n` +
+                        `Full Response:\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<span class="error">❌ ERROR</span>\n\n` +
+                        `Status: ${response.status}\n` +
+                        `Error: ${data.error}\n\n` +
+                        `Full Response:\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<span class="error">❌ FETCH ERROR</span>\n\n${err.message}\n\n${err.stack}`;
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            console.log('Page loaded, ready to test');
+        });
+    </script>
+</body>
+</html>

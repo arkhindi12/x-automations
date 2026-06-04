@@ -1,0 +1,24 @@
+# Docker
+.env
+.env.docker
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+
+# Database
+postgres_data/
+
+# SSL Certificates
+ssl/*.pem
+ssl/*.key
+ssl/*.crt
+
+# Backups
+*.sql
+backup_*.sql
+
+# Temporary files
+tmp/
+temp/

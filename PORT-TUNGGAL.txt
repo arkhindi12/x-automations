@@ -1,0 +1,63 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                   X AUTOMATION DASHBOARD - PORT TUNGGAL              ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+✅ Server sekarang berjalan di SATU PORT saja:
+
+   🌐 http://localhost:3000
+
+Backend dan Frontend sudah digabung.
+Tidak perlu proxy Vite lagi.
+
+═══════════════════════════════════════════════════════════════════════
+
+📋 CARA AKSES:
+
+1. Buka browser
+2. Ketik:
+   
+   http://localhost:3000
+
+3. Dashboard langsung muncul
+
+═══════════════════════════════════════════════════════════════════════
+
+🔧 CARA START SERVER:
+
+   ./START-SERVER.sh
+
+atau manual:
+
+   cd "$HOME/Downloads/X automation"
+   export PATH="/tmp/pgsql/bin:$PATH"
+   pg_ctl -D .pgdata -l .pgdata/logfile start -o "-p 5433"
+   
+   export NVM_DIR="$HOME/.nvm"
+   . "$NVM_DIR/nvm.sh"
+   nvm use 20
+   
+   export DATABASE_URL=postgresql://postgres@localhost:5433/x_automation
+   export PORT=3000
+   pnpm --filter @workspace/api-server run start
+
+═══════════════════════════════════════════════════════════════════════
+
+📊 CEK STATUS:
+
+   lsof -i:3000        # Server unified
+   lsof -i:5433        # PostgreSQL
+
+═══════════════════════════════════════════════════════════════════════
+
+📝 LOG SERVER:
+
+   tail -f .unified-server.log
+
+═══════════════════════════════════════════════════════════════════════
+
+🛑 STOP SERVER:
+
+   lsof -ti:3000 | xargs kill -9
+   pg_ctl -D .pgdata stop
+
+═══════════════════════════════════════════════════════════════════════
